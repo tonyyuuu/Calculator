@@ -9,6 +9,47 @@
 import Foundation
 
 class Processor {
+    
+    var accumulator = 0.0
+    
+    var result: Double {
+        get {
+            return accumulator
+        }
+    }
+    
+    struct PendingBinaryOperationInfo {
+        var binaryFunction: (Double, Double) -> Double
+        var firstOperand: Double
+    }
+    var pendingOperation: PendingBinaryOperationInfo?
+    
+    func executePendingOperation() {
+        if pendingOperation != nil {
+            accumulator = pendingOperation!.binaryFunction(pendingOperation!.firstOperand,
+                                                           accumulator)
+            pendingOperation = nil
+        }
+    }
+    
+    func addOperand(operand: Double) {
+        accumulator = operand
+    }
+    
+    func performOperation(symbol: String) {
+        if let operation = operations[symbol] {
+            switch operation {
+            case .Constant(let value): accumulator = value
+            case .UniaryOperation(let f):
+                accumulator = f(accumulator)
+            case .BinaryOperation(let f):
+                executePendingOperation()
+                pendingOperation = PendingBinaryOperationInfo(binaryFunction: f, firstOperand: accumulator)
+            case .Equals:
+                executePendingOperation()
+            }
+        }
+    }
 
     enum Operation {
         case Constant(Double)

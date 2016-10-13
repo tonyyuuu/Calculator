@@ -49,49 +49,14 @@ class CalculatorViewController: UIViewController {
     }
     
     @IBAction func tapOperation(sender: UIButton) {
-        switch sender.currentTitle! {
-        case "%":
-            if currentOperation != nil {
-                let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                displayValue = result
-            }
-            previousValue = displayValue
-            currentOperation = "%"
-            hasStartedTyping = false
-        case "-":
-            if currentOperation != nil {
-                let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                displayValue = result
-            }
-            previousValue = displayValue
-            currentOperation = "-"
-            hasStartedTyping = false
-        case "×":
-            if currentOperation != nil {
-                let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                displayValue = result
-            }
-            previousValue = displayValue
-            currentOperation = "×"
-            hasStartedTyping = false
-        case "÷":
-            if currentOperation != nil {
-                let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                displayValue = result
-            }
-            previousValue = displayValue
-            currentOperation = "÷"
-            hasStartedTyping = false
-        case "√": display.text = String(sqrt(displayValue))
-        case "=":
-            if currentOperation != nil {
-                let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                displayValue = result
-            }
-            currentOperation = nil
-            hasStartedTyping = false
-        default: break
+        if hasStartedTyping {
+            processor.addOperand(displayValue)
         }
+        hasStartedTyping = false
+        if let operation = sender.currentTitle {
+            processor.performOperation(operation)
+        }
+        displayValue = processor.result
     }
     
     @IBAction func tapNumber(sender: UIButton) {
