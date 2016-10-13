@@ -13,9 +13,14 @@ class CalculatorViewController: UIViewController {
     
     @IBOutlet weak var display: UILabel!
     
+    var processor = Processor()
+    
     var displayValue: Double {
         get {
             return Double(display.text!)!
+        }
+        set {
+            display.text = String(newValue)
         }
     }
     var previousValue: Double = 0
@@ -24,7 +29,7 @@ class CalculatorViewController: UIViewController {
     
     func calculate(operand1: Double, operand2: Double, operation: String) -> Double {
         switch operation {
-        case "+": return operand1 + operand2
+        case "%": return operand1 % operand2//operand1.truncatingRemainder(dividingBy: operand2)
         case "-": return operand1 - operand2
         case "×": return operand1 * operand2
         case "÷":
@@ -36,21 +41,27 @@ class CalculatorViewController: UIViewController {
         default: return 0
         }
     }
+    @IBAction func tapClear(sender: UIButton) {
+        displayValue = 0.0
+        hasStartedTyping = false
+        previousValue = 0
+        currentOperation = nil
+    }
     
     @IBAction func tapOperation(sender: UIButton) {
         switch sender.currentTitle! {
-        case "+":
+        case "%":
             if currentOperation != nil {
                 let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                display.text = String(result)
+                displayValue = result
             }
             previousValue = displayValue
-            currentOperation = "+"
+            currentOperation = "%"
             hasStartedTyping = false
         case "-":
             if currentOperation != nil {
                 let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                display.text = String(result)
+                displayValue = result
             }
             previousValue = displayValue
             currentOperation = "-"
@@ -58,7 +69,7 @@ class CalculatorViewController: UIViewController {
         case "×":
             if currentOperation != nil {
                 let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                display.text = String(result)
+                displayValue = result
             }
             previousValue = displayValue
             currentOperation = "×"
@@ -66,7 +77,7 @@ class CalculatorViewController: UIViewController {
         case "÷":
             if currentOperation != nil {
                 let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                display.text = String(result)
+                displayValue = result
             }
             previousValue = displayValue
             currentOperation = "÷"
@@ -75,7 +86,7 @@ class CalculatorViewController: UIViewController {
         case "=":
             if currentOperation != nil {
                 let result = calculate(previousValue, operand2: displayValue, operation: currentOperation!)
-                display.text = String(result)
+                displayValue = result
             }
             currentOperation = nil
             hasStartedTyping = false
@@ -90,7 +101,6 @@ class CalculatorViewController: UIViewController {
             display.text = sender.currentTitle!
             hasStartedTyping = true
         }
-        
     }
 
 }
