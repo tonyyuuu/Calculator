@@ -9,7 +9,11 @@
 import Foundation
 import UIKit
 
-class CalculatorViewController: UIViewController {
+class CalculatorViewController: MyBaseViewController {
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = true
+    }
     
     @IBOutlet weak var display: UILabel!
     
